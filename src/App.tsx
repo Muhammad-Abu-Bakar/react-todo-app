@@ -9,7 +9,21 @@ type Todo = {
 
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
-  const [todos, setTodos] = useState<Todo[]>([])
+
+  // === CHANGED: Lazy init - localStorage se todos load karte hain on first mount ===
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const stored = localStorage.getItem('todos')
+    if (stored) {
+      try {
+        return JSON.parse(stored)
+      } catch {
+        // Agar data corrupt hai (manually edited, etc.) to empty se shuru karo
+        return []
+      }
+    }
+    return []
+  })
+  // === END CHANGED ===
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
