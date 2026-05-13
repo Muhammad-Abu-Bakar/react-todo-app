@@ -148,4 +148,28 @@
   margin: 0;
   font-size: 0.9rem;
   color: #ff6666;
+}/* === NEW: Refresh quote button styling === */
+.refresh-quote-btn {
+  display: block;
+  margin: 0 0 1.5rem auto;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  background-color: transparent;
+  color: inherit;
+  opacity: 0.7;
+  border: 1px solid rgba(127, 127, 127, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refresh-quote-btn:hover:not(:disabled) {
+  opacity: 1;
+  border-color: #646cff;
+  color: #646cff;
+}
+
+.refresh-quote-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }

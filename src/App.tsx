@@ -29,41 +29,39 @@ function App() {
 
   const [quote, setQuote] = useState<Quote | null>(null)
   const [isLoadingQuote, setIsLoadingQuote] = useState<boolean>(true)
-
-  // === NEW: Error state for the quote fetch ===
   const [quoteError, setQuoteError] = useState<string | null>(null)
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
 
-  useEffect(() => {
-    async function fetchQuote() {
-      // === CHANGED: Wrap fetch logic in try/catch/finally ===
-      try {
-        setIsLoadingQuote(true)
-        setQuoteError(null) // Clear any previous error before retrying
+  // === CHANGED: Extracted fetchQuote function so it can be called from
+  // both useEffect (on mount) and the refresh button (on click) ===
+  async function fetchQuote() {
+    try {
+      setIsLoadingQuote(true)
+      setQuoteError(null)
 
-        const response = await fetch('https://dummyjson.com/quotes/random')
+      const response = await fetch('https://dummyjson.com/quotes/random')
 
-        // fetch does NOT throw on 404/500 - we must check manually
-        if (!response.ok) {
-          throw new Error(`Server responded with status ${response.status}`)
-        }
-
-        const data = await response.json()
-        setQuote(data)
-      } catch (err) {
-        // err is typed as `unknown` - narrow it with instanceof
-        const message = err instanceof Error ? err.message : 'Something went wrong'
-        setQuoteError(message)
-      } finally {
-        // Always runs - whether success or error
-        setIsLoadingQuote(false)
+      if (!response.ok) {
+        throw new Error(`Server responded with status ${response.status}`)
       }
-      // === END CHANGED ===
+
+      const data = await response.json()
+      setQuote(data)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong'
+      setQuoteError(message)
+    } finally {
+      setIsLoadingQuote(false)
     }
+  }
+
+  // === CHANGED: useEffect now just calls the extracted function on mount ===
+  useEffect(() => {
     fetchQuote()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function handleAddTodo(event: React.FormEvent) {
@@ -107,20 +105,29 @@ function App() {
         </div>
       )}
 
-      {/* === NEW: Error state === */}
+      {/* Error state */}
       {!isLoadingQuote && quoteError && (
         <div className="quote quote-error">
           <p>Could not load quote: {quoteError}</p>
         </div>
       )}
 
-      {/* === CHANGED: Success state - now also checks no error === */}
+      {/* Success state */}
       {!isLoadingQuote && !quoteError && quote && (
         <div className="quote">
           <p className="quote-text">"{quote.quote}"</p>
           <p className="quote-author">— {quote.author}</p>
         </div>
       )}
+
+      {/* === NEW: Refresh button to manually fetch a new quote === */}
+      <button
+        onClick={fetchQuote}
+        disabled={isLoadingQuote}
+        className="refresh-quote-btn"
+      >
+        🔄 New Quote
+      </button>
 
       <form className="add-todo" onSubmit={handleAddTodo}>
         <input
