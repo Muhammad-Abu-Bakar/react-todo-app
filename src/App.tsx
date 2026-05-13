@@ -29,6 +29,16 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== idToDelete))
   }
 
+  function handleToggleTodo(idToToggle: string) {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === idToToggle
+          ? { ...todo, completed: !todo.completed }
+          : todo
+      )
+    )
+  }
+
   return (
     <div className="app">
       <h1>My Todo List</h1>
@@ -46,7 +56,20 @@ function App() {
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
-            {todo.text}
+            <input
+              type="checkbox"
+              checked={todo.completed}
+              onChange={() => handleToggleTodo(todo.id)}
+            />
+            <span
+              style={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                marginLeft: '0.5rem',
+                marginRight: '0.5rem',
+              }}
+            >
+              {todo.text}
+            </span>
             <button onClick={() => handleDeleteTodo(todo.id)}>X</button>
           </li>
         ))}
