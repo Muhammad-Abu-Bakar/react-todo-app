@@ -1,18 +1,29 @@
 import { useState } from 'react'
 import './App.css'
 
-function App() {
-  // The text currently typed in the input box
-  const [inputValue, setInputValue] = useState<string>('')
+// Aik todo ki shape kya hai - TypeScript ko bata rahe hain
+type Todo = {
+  id: string
+  text: string
+  completed: boolean
+}
 
-  // The list of todos we have added so far
-  const [todos, setTodos] = useState<string[]>([])
+function App() {
+  const [inputValue, setInputValue] = useState<string>('')
+  const [todos, setTodos] = useState<Todo[]>([])
 
   function handleAddTodo() {
     const trimmed = inputValue.trim()
-    if (trimmed === '') return // ignore empty input
-    setTodos([...todos, trimmed])
-    setInputValue('') // clear the input box
+    if (trimmed === '') return
+
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      text: trimmed,
+      completed: false,
+    }
+
+    setTodos([...todos, newTodo])
+    setInputValue('')
   }
 
   return (
@@ -30,8 +41,8 @@ function App() {
       </div>
 
       <ul>
-        {todos.map((todo, index) => (
-          <li key={index}>{todo}</li>
+        {todos.map((todo) => (
+          <li key={todo.id}>{todo.text}</li>
         ))}
       </ul>
     </div>
