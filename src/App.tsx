@@ -7,27 +7,43 @@ type Todo = {
   completed: boolean
 }
 
+// === NEW: Shape of the quote data we get from the API ===
+type Quote = {
+  quote: string
+  author: string
+}
+
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
 
-  // === CHANGED: Lazy init - localStorage se todos load karte hain on first mount ===
   const [todos, setTodos] = useState<Todo[]>(() => {
     const stored = localStorage.getItem('todos')
     if (stored) {
       try {
         return JSON.parse(stored)
       } catch {
-        // Agar data corrupt hai (manually edited, etc.) to empty se shuru karo
         return []
       }
     }
     return []
   })
-  // === END CHANGED ===
+
+  // === NEW: Quote state starts as null until fetch completes ===
+  const [quote, setQuote] = useState<Quote | null>(null)
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
+
+  // === NEW: Fetch a random quote on first mount ===
+  useEffect(() => {
+    async function fetchQuote() {
+      const response = await fetch('https://dummyjson.com/quotes/random')
+      const data = await response.json()
+      setQuote(data)
+    }
+    fetchQuote()
+  }, [])
 
   function handleAddTodo(event: React.FormEvent) {
     event.preventDefault()
@@ -62,6 +78,14 @@ function App() {
   return (
     <div className="app">
       <h1>My Todo List</h1>
+
+      {/* === NEW: Quote section, only renders when quote is loaded === */}
+      {quote && (
+        <div className="quote">
+          <p className="quote-text">"{quote.quote}"</p>
+          <p className="quote-author">— {quote.author}</p>
+        </div>
+      )}
 
       <form className="add-todo" onSubmit={handleAddTodo}>
         <input

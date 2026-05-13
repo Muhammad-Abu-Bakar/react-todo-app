@@ -110,3 +110,25 @@
   border-color: #ff4444;
   opacity: 1;
 }
+/* === NEW: Quote section styling === */
+.quote {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-left: 3px solid #646cff;
+  background-color: rgba(100, 108, 255, 0.08);
+  border-radius: 4px;
+}
+
+.quote-text {
+  margin: 0 0 0.5rem;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.quote-author {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-align: right;
+}
