@@ -7,7 +7,6 @@ type Todo = {
   completed: boolean
 }
 
-// === NEW: Shape of the quote data we get from the API ===
 type Quote = {
   quote: string
   author: string
@@ -28,19 +27,24 @@ function App() {
     return []
   })
 
-  // === NEW: Quote state starts as null until fetch completes ===
   const [quote, setQuote] = useState<Quote | null>(null)
+
+  // === NEW: Track whether the quote is currently being fetched ===
+  const [isLoadingQuote, setIsLoadingQuote] = useState<boolean>(true)
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos))
   }, [todos])
 
-  // === NEW: Fetch a random quote on first mount ===
   useEffect(() => {
     async function fetchQuote() {
+      // === CHANGED: Set loading true before fetch, false after ===
+      setIsLoadingQuote(true)
       const response = await fetch('https://dummyjson.com/quotes/random')
       const data = await response.json()
       setQuote(data)
+      setIsLoadingQuote(false)
+      // === END CHANGED ===
     }
     fetchQuote()
   }, [])
@@ -79,13 +83,21 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
 
-      {/* === NEW: Quote section, only renders when quote is loaded === */}
-      {quote && (
+      {/* === CHANGED: Show loading message while fetching === */}
+      {isLoadingQuote && (
+        <div className="quote">
+          <p className="quote-loading">Loading quote...</p>
+        </div>
+      )}
+
+      {/* === CHANGED: Show quote only when not loading AND quote exists === */}
+      {!isLoadingQuote && quote && (
         <div className="quote">
           <p className="quote-text">"{quote.quote}"</p>
           <p className="quote-author">— {quote.author}</p>
         </div>
       )}
+      {/* === END CHANGED === */}
 
       <form className="add-todo" onSubmit={handleAddTodo}>
         <input
