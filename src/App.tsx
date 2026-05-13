@@ -11,7 +11,9 @@ function App() {
   const [inputValue, setInputValue] = useState<string>('')
   const [todos, setTodos] = useState<Todo[]>([])
 
-  function handleAddTodo() {
+  function handleAddTodo(event: React.FormEvent) {
+    event.preventDefault()
+
     const trimmed = inputValue.trim()
     if (trimmed === '') return
 
@@ -43,15 +45,15 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
 
-      <div className="add-todo">
+      <form className="add-todo" onSubmit={handleAddTodo}>
         <input
           type="text"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
           placeholder="What needs to be done?"
         />
-        <button onClick={handleAddTodo}>Add</button>
-      </div>
+        <button type="submit">Add</button>
+      </form>
 
       <ul>
         {todos.map((todo) => (
