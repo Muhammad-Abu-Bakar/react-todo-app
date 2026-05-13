@@ -138,3 +138,14 @@
   opacity: 0.6;
   font-size: 0.9rem;
 }
+/* === NEW: Error state styling === */
+.quote-error {
+  border-left-color: #ff4444;
+  background-color: rgba(255, 68, 68, 0.08);
+}
+
+.quote-error p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ff6666;
+}
