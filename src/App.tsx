@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import './App.css'
 
-// Aik todo ki shape kya hai - TypeScript ko bata rahe hain
 type Todo = {
   id: string
   text: string
@@ -26,6 +25,10 @@ function App() {
     setInputValue('')
   }
 
+  function handleDeleteTodo(idToDelete: string) {
+    setTodos(todos.filter((todo) => todo.id !== idToDelete))
+  }
+
   return (
     <div className="app">
       <h1>My Todo List</h1>
@@ -42,7 +45,10 @@ function App() {
 
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.text}</li>
+          <li key={todo.id}>
+            {todo.text}
+            <button onClick={() => handleDeleteTodo(todo.id)}>X</button>
+          </li>
         ))}
       </ul>
     </div>
