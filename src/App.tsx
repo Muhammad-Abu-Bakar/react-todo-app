@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 type Todo = {
@@ -10,6 +10,10 @@ type Todo = {
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
   const [todos, setTodos] = useState<Todo[]>([])
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos))
+  }, [todos])
 
   function handleAddTodo(event: React.FormEvent) {
     event.preventDefault()
