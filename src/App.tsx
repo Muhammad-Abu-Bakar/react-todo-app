@@ -63,16 +63,15 @@ function App() {
               checked={todo.completed}
               onChange={() => handleToggleTodo(todo.id)}
             />
-            <span
-              style={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-                marginLeft: '0.5rem',
-                marginRight: '0.5rem',
-              }}
-            >
+            <span className={`todo-text ${todo.completed ? 'completed' : ''}`}>
               {todo.text}
             </span>
-            <button onClick={() => handleDeleteTodo(todo.id)}>X</button>
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteTodo(todo.id)}
+            >
+              X
+            </button>
           </li>
         ))}
       </ul>
